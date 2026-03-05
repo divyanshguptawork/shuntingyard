@@ -68,3 +68,28 @@ void printlnfix(Node* root) {
     if (isOperator(root->data)) std::cout << ") ";
   }
 }
+
+void printPrefix(Node* root) {
+  if (root) {
+    if (isOperator(root->data)) std::cout<<"(";
+    printPrefix(root->left);
+    printPrefix(root->right);
+  }
+}
+
+void printPostfix(Node* root) {
+  if (root) {
+    printPostfix(root->left);
+    printPostfix(root->right);
+    std::cout<<root->data<<" ";
+  }
+}
+
+// main algorithms
+int main(){
+  char input[100];
+  std::cout<<"Enter infix expression (space separated): "<< std::endl;
+  std::cin.getline(input, 100);
+
+  Node *opStack = nullptr;
+  Node *outHead = nullptr, *outTail = nullptr;

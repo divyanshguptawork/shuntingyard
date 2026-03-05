@@ -93,3 +93,69 @@ int main(){
 
   Node *opStack = nullptr;
   Node *outHead = nullptr, *outTail = nullptr;
+
+  //shunting yard algorithm
+  char* token = strtok(input, " ");
+  while (token!=nullptr) {
+    char c = token[0];
+
+    if (isdigit(c)) {
+      enqueue(outHead, outTail, new Node(c));
+    } else if (c=='(') {
+      push(opStack, new Node(c));
+    } else if(c==')') {
+      while (peek(opStack) && peek(opStack) ->data!='(') {
+	enqueue(outHead, outTail, pop(opStack));
+      }
+      delete pop(opStack); // remove '('
+    } else if (isOperator(c)) {
+      while (peek(opStack) && getPrecedence(peek(opStack)->data)>=getPrecedence(c)) {
+	// note: ^ is right associative but for single digits/simplicity
+	// we treat standard precendence here
+	enqueue(outHead, outTail, pop(opStack));
+      }
+      push(opStack, new Node(c));
+    }
+    token = strtok(nullptr, " ");
+  }
+  while (peek(opStack)) {
+    enqueue(outHead, outTail, pop(opStack));
+  }
+
+  // print postfix result from shunting yard
+  std::cout<<"Postfix(from Shunting Yard): ";
+  Node* current = outHead;
+  while (current) {
+    std::cout<<current->data<<" ";
+    current = current->next;
+  }
+  std::cout<<"\n\n";
+
+  // build expression tree
+  Node* treeStack = nullptr;
+  while (outHead) {
+    Node* node = dequeue(outHead, outTail);
+    if (isdigit(node->data)) {
+      push(treeStack, node);
+    } else {
+      node->right = pop(treeStack);
+      node->left = pop(treeStack);
+      push(treeStack, node);
+    }
+  }
+  Node* root = pop(treeStack, node);
+
+  //output from tree
+  std::cout<<"lnfix (from tree): ";
+  printlnfix(root);
+  std::cout<<"\n";
+  std::cout<<"Prefix (from tree): ";
+  printPrefix(root);
+  std::cout<<"\n";
+  std::cout<<"Postfix (from tree): ";
+  printPostfix(root);
+  std::cout<<"\n";
+
+  return 0;
+}
+

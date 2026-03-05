@@ -143,7 +143,7 @@ int main(){
       push(treeStack, node);
     }
   }
-  Node* root = pop(treeStack, node);
+  Node* root = pop(treeStack);
 
   //output from tree
   std::cout<<"lnfix (from tree): ";

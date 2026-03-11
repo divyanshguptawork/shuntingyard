@@ -71,7 +71,7 @@ void printlnfix(Node* root) {
 
 void printPrefix(Node* root) {
   if (root) {
-    if (isOperator(root->data)) std::cout<<"(";
+    std::cout<< root -> data << " ";
     printPrefix(root->left);
     printPrefix(root->right);
   }
